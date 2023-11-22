@@ -33,18 +33,16 @@ public class Server {
 
 
 	public void runServerMethod() {
+		System.out.println("Server sa spustil");
 		try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
 			ExecutorService executor = Executors.newCachedThreadPool();
 			while (true) {
-				System.out.println("Cakam na ulohu...");
 				Socket socket = serverSocket.accept();
 
-				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-				ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-				
-				numOfTCP = ois.readInt();
-				System.out.println("server prijal: " + numOfTCP);
-				copiedMap = (ConcurrentHashMap<String, Long>) ois.readObject();
+				ObjectInputStream osi = new ObjectInputStream(socket.getInputStream());				
+				numOfTCP = osi.readInt();
+				System.out.println("Server prijal: " + numOfTCP);
+				copiedMap = (ConcurrentHashMap<String, Long>) osi.readObject();
 				searchniFileToShare();
 								
 				for (int i = 0; i < numOfTCP; i++) {

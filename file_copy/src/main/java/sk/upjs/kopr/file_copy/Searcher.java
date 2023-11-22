@@ -55,7 +55,7 @@ public class Searcher implements Callable<long[]> {
 				fileSize = fileSize + files[i].length();
 			}
 			else if (files[i].isFile() && !serverRequest) {
-				String file = files[i].getPath().substring(Client.FINAL_DESTINATION.lastIndexOf('/') + 1);
+				String file = files[i].getPath().substring(Client.FINAL_DESTINATION.lastIndexOf('\\') + 1);
 				copiedMap.put(file, files[i].length());
 				fileCount++;
 				fileSize = fileSize + files[i].length();

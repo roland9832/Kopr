@@ -76,7 +76,8 @@ public class Client extends Service<Boolean> {
 		Searcher searcher = new Searcher(new File(FINAL_DESTINATION), copiedMap, false);
 		try {
 			long[] countSize = searcher.call();
-			System.out.println("Final destination:" + FINAL_DESTINATION);
+			System.out.println("Final destination:" + 
+			FINAL_DESTINATION);
 			fileSize = countSize[0];
 			fileCount = Long.valueOf(countSize[1]).intValue();
 

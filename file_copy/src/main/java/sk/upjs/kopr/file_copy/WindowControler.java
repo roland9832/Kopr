@@ -22,9 +22,6 @@ public class WindowControler {
 	private CountDownLatch latch;
 
 	@FXML
-	private Button continue_button;
-
-	@FXML
 	private Label copy_lable;
 
 	@FXML
@@ -43,20 +40,15 @@ public class WindowControler {
 	private Button stop_button;
 	
 	@FXML
-	void initalize() {
-		copy_lable.setText(String.valueOf(Server.FILE_TO_SHARE));
+	void initialize() {
+		copy_lable.setText(Server.FILE_TO_SHARE);
 		filePath_lable.setText(Client.FINAL_DESTINATION);
-		continue_button.setDisable(true);
 		stop_button.setDisable(true);
 	}
 	
 	
 
-	@FXML
-	void onContinueClick(ActionEvent event) {
-		
-		
-	}
+	
 	
 	@FXML
 	void onStartClick(ActionEvent event) {
@@ -82,7 +74,8 @@ public class WindowControler {
 		
 		numOfTCP_textfield.setDisable(true);
 		latch = new CountDownLatch(numOfTCP);
-		
+		stop_button.setDisable(false);
+		start_button.setDisable(true);
 		client = new Client(numOfTCP, latch);
 		client.start();
 	}
@@ -90,6 +83,8 @@ public class WindowControler {
 	@FXML
 	void onStopClick(ActionEvent event) {
 		client.cancel();
+		start_button.setDisable(false);
+		
 	}
 
 }

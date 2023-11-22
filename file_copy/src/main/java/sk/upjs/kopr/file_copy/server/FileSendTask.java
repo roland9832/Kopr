@@ -47,7 +47,7 @@ public class FileSendTask implements Runnable {
 
 					String sendFileName = sendFile.getPath().substring(Server.FILE_TO_SHARE.lastIndexOf('\\') + 1);
 					long sendFileSize = sendFile.length();
-					if (coppiedMap == null || coppiedMap.isEmpty() || !coppiedMap.containsKey(sendFileName)) {
+					if (coppiedMap.isEmpty() || !coppiedMap.containsKey(sendFileName)) {
 						offset = 0;
 					} else {
 						offset = coppiedMap.get(sendFileName);
@@ -82,23 +82,24 @@ public class FileSendTask implements Runnable {
 				oos.flush();
 
 			} catch (SocketException e) {
-				System.out.println("Server nema dvojucku");
+				System.out.println("Server nema dvojicku");
 
 			} catch (InterruptedException e) {
 				isInterrupted = true;
 			} finally {
-				if (oos != null)
-					oos.close();
-				if (socket != null && socket.isConnected())
-					socket.close();
-				if (isInterrupted)
-					Thread.currentThread().interrupt();
+				oos.close();
+				socket.close();
+				Thread.currentThread().interrupt();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+	
+	private void sendData() {
+		
 	}
 
 }

@@ -1,5 +1,6 @@
 package sk.upjs.kopr.file_copy.client;
 
+import java.awt.AlphaComposite;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -34,60 +35,65 @@ public class FileReceiveTask implements Runnable {
 	private void call() {
 		try {
 			ObjectInputStream osi = new ObjectInputStream(socket.getInputStream());
+
 			while (true) {
 				String mapKey = osi.readUTF();
-				System.out.println("Save File Name: " + mapKey);
+				System.out.println("Save File Name: " + mapKey + Thread.currentThread().getName() );
 				if (mapKey.equals(Searcher.POISON_PILL.getName())) {
 					break;
 				}
 				File saveFile = new File(Client.FINAL_DESTINATION + '\\' + mapKey);
 				File parentOfFile = saveFile.getParentFile();
 				parentOfFile.mkdirs();
-				
-				
-				if(copiedMap.containsKey(mapKey)) {
-					offset = copiedMap.get(mapKey);
-					System.out.println("here: 1");
-				}else {
-					offset = 0;
-					System.out.println("here: 2");
-				}
-				
-				long fileSize = osi.readLong();
-			
 				RandomAccessFile raf = new RandomAccessFile(saveFile, "rw");
+
+				if (copiedMap.containsKey(mapKey)) {
+					offset = copiedMap.get(mapKey);
+				} else {
+					offset = 0;
+				}
+
+				long fileSize = osi.readLong();
+
 				raf.setLength(fileSize);
 				byte[] recievedBytes = new byte[BUFFER_SIZE];
 				raf.seek(offset);
 				int veReadBytes = 0;
-				System.out.println("After raf");
-				while(offset < fileSize) {
+				while (offset < fileSize) {
 					if (Thread.currentThread().isInterrupted()) {
 						break;
 					}
-					if(fileSize - offset < recievedBytes.length) {
-						veReadBytes = osi.read(recievedBytes, 0, (int) (fileSize - offset));
-					}else {
-						veReadBytes = osi.read(recievedBytes, 0, recievedBytes.length);
-					}
-					
-					raf.seek(offset);
-					raf.write(recievedBytes, 0, veReadBytes);
-					offset = offset + veReadBytes;
-					
+					writeData(fileSize, recievedBytes, veReadBytes, raf, osi);
 				}
 				raf.close();
-				if(offset < fileSize) {
+				if (offset < fileSize) {
 					copiedMap.put(mapKey, offset);
-				}else {
-					copiedMap.put(mapKey, fileSize); //treba to vobec? offset a filesize by sa tu mal rovnat
 				}
 			}
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
-		}finally{
+		} finally {
+			
 			Thread.currentThread().interrupt();
+		}
+	}
+
+	private void writeData(long fileSize, byte[] recievedBytes, int veReadBytes, RandomAccessFile raf,
+			ObjectInputStream osi) {
+		try {
+			if (fileSize - offset < recievedBytes.length) {
+				veReadBytes = osi.read(recievedBytes, 0, (int) (fileSize - offset));
+			} else {
+				veReadBytes = osi.read(recievedBytes, 0, recievedBytes.length);
+			}
+
+			raf.seek(offset);
+			raf.write(recievedBytes, 0, veReadBytes);
+			offset = offset + veReadBytes;
+
+		} catch (Exception e) {
+			System.out.println("Zapis zlihal");
 		}
 	}
 

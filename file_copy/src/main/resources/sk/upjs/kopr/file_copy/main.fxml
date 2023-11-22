@@ -10,7 +10,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="numOfTCP_textfield" layoutX="87.0" layoutY="163.0" prefHeight="26.0" prefWidth="460.0" />
-      <Text layoutX="204.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="File copy project" wrappingWidth="192.7945556640625">
+      <Text layoutX="179.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="File copy project kopr" wrappingWidth="242.39453125">
          <font>
             <Font size="24.0" />
          </font>
@@ -25,7 +25,7 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <Button fx:id="start_button" layoutX="245.0" layoutY="276.0" mnemonicParsing="false" onAction="#onStartClick" prefHeight="40.0" prefWidth="90.0" text="Start">
+      <Button fx:id="start_button" layoutX="91.0" layoutY="235.0" mnemonicParsing="false" onAction="#onStartClick" prefHeight="40.0" prefWidth="90.0" text="Start">
          <font>
             <Font size="18.0" />
          </font>
@@ -35,19 +35,16 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <Button fx:id="stop_button" layoutX="377.0" layoutY="283.0" mnemonicParsing="false" onAction="#onStopClick" prefHeight="20.0" prefWidth="70.0" text="Stop" />
-      <Button fx:id="continue_button" layoutX="126.0" layoutY="283.0" mnemonicParsing="false" onAction="#onContinueClick" prefHeight="20.0" prefWidth="70.0" text="Continue" />
+      <Button fx:id="stop_button" layoutX="456.0" layoutY="235.0" mnemonicParsing="false" onAction="#onStopClick" prefHeight="40.0" prefWidth="90.0" text="Stop">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
       <Label fx:id="filePath_lable" layoutX="131.0" layoutY="98.0" prefHeight="18.0" prefWidth="414.0" text="CopyFromDestination">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
       <Label fx:id="copy_lable" layoutX="130.0" layoutY="128.0" prefHeight="18.0" prefWidth="411.0" text="CopyTodestination">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="progress_lable" layoutX="91.0" layoutY="200.0" prefHeight="19.0" prefWidth="307.0" text="Progress info...">
          <font>
             <Font size="14.0" />
          </font>
