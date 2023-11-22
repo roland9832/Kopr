@@ -59,11 +59,12 @@ public class FileReceiveTask implements Runnable {
 				byte[] recievedBytes = new byte[BUFFER_SIZE];
 				raf.seek(offset);
 				int veReadBytes = 0;
-				while (offset < fileSize) {
+				boolean running = true;
+				while (offset < fileSize && running) {
 					if (Thread.currentThread().isInterrupted()) {
 						break;
 					}
-					writeData(fileSize, recievedBytes, veReadBytes, raf, osi);
+					running = writeData(fileSize, recievedBytes, veReadBytes, raf, osi);
 				}
 				raf.close();
 				if (offset < fileSize) {
@@ -79,7 +80,7 @@ public class FileReceiveTask implements Runnable {
 		}
 	}
 
-	private void writeData(long fileSize, byte[] recievedBytes, int veReadBytes, RandomAccessFile raf,
+	private boolean writeData(long fileSize, byte[] recievedBytes, int veReadBytes, RandomAccessFile raf,
 			ObjectInputStream osi) {
 		try {
 			if (fileSize - offset < recievedBytes.length) {
@@ -91,9 +92,10 @@ public class FileReceiveTask implements Runnable {
 			raf.seek(offset);
 			raf.write(recievedBytes, 0, veReadBytes);
 			offset = offset + veReadBytes;
-
+			return true;
 		} catch (Exception e) {
 			System.out.println("Zapis zlihal");
+			return false;
 		}
 	}
 
