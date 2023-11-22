@@ -46,24 +46,11 @@ public class FileSendTask implements Runnable {
 
 					String fileToSendName = sendFile.getPath().substring(Server.FILE_TO_SHARE.getPath().lastIndexOf('/') + 1);
 					long fileToSendSize = sendFile.length();
-
-//					System.out.println("------- FILE TO SEND NAME: " + fileToSendName);
-
 					if (coppiedMap == null || coppiedMap.isEmpty() || !coppiedMap.containsKey(fileToSendName)) {
 						offset = 0;
-
-//						System.out.println("Posielam subor: " + fileToSend.getName() + " , velkost: " + fileToSendSize
-//								+ " stiahnuty offset: " + offset + " cez vlakno: " + Thread.currentThread().getName());
-
 					} else { // inak si vezmem offset z mapy stiahnutych
 						offset = coppiedMap.get(fileToSendName);
-
-//						System.out.println("Posielam ZVYSNE BAJTY zo suboru: " + fileToSend.getName() + " , velkost: "
-//								+ fileToSendSize + " stiahnuty offset: " + offset + " cez vlakno: "
-//								+ Thread.currentThread().getName());
-
 						if (offset == fileToSendSize) {
-//							System.out.println("!!! TENTO SUBOR NEPOSIELAM, LEBO HO UZ MAM: " + fileToSend.getName());
 							sendFile = sendQueue.take();
 							continue;
 						}
@@ -83,7 +70,6 @@ public class FileSendTask implements Runnable {
 						}
 						offset += raf.read(buffer);
 						oos.write(buffer);
-//						System.out.println("******** BUFFER: " + Arrays.toString(buffer));
 					}
 
 					oos.flush();

@@ -28,12 +28,17 @@ public class Searcher implements Callable<long[]> {
 	public Searcher(File main, ConcurrentHashMap<String, Long> copiedMap, boolean serverRequest) {
 		this.main = main;
 		this.copiedMap = copiedMap;
+		this.serverRequest = serverRequest;
 	}
 
 	// pill?
+	@Override
 	public long[] call() throws Exception {
 		if (main.exists() && main.listFiles().length > 0) {
 			search(main.listFiles());
+			for(int i = 0; i < numOfTCP; i++) {
+				sendQueue.offer(Searcher.POISON_PILL);
+			}
 		}
 
 		return new long[] { fileSize, fileCount };

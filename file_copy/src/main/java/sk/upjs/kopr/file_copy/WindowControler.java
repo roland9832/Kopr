@@ -1,5 +1,7 @@
 package sk.upjs.kopr.file_copy;
 
+import java.util.concurrent.CountDownLatch;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -15,6 +17,7 @@ public class WindowControler {
 	private int numOfTCP;
 	private Client client;
 	private DialogPane dialog;
+	private CountDownLatch latch;
 
 	@FXML
 	private Button continue_button;
@@ -68,11 +71,15 @@ public class WindowControler {
 				return;
 			}
 		}
+		latch = new CountDownLatch(numOfTCP);
+		
+		client = new Client(numOfTCP, latch);
+		client.start();
 	}
 
 	@FXML
 	void onStopClick(ActionEvent event) {
-
+		client.cancel();
 	}
 
 }

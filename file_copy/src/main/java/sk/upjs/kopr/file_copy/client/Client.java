@@ -8,66 +8,67 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import sk.upjs.kopr.file_copy.Searcher;
 import sk.upjs.kopr.file_copy.server.Server;
 
-public class Client {
-	
-	public static final File FINAL_DESTINATION = new File("Users/Roniko/Desktop/test_client");
-	
-	
+public class Client extends Service<Boolean> {
+
+	public static final File FINAL_DESTINATION = new File("C:\\Users\\Roniko\\Desktop\\test_client");
+
 	private static ConcurrentHashMap<String, Long> copiedMap;
 	private static int numOfTCP;
 	private static int fileCount;
 	private static long fileSize;
-	private static boolean serverRequest = true;
 	private CountDownLatch latch;
 	private ExecutorService executor;
 	ObjectOutputStream oos;
-	
+
 	public Client(int numOfTCP, CountDownLatch latch) {
 		this.numOfTCP = numOfTCP;
 		this.latch = latch;
-		this.executor = Executors.newFixedThreadPool(numOfTCP); 
-		
+		this.executor = Executors.newFixedThreadPool(numOfTCP);
+
 	}
-	
-	protected Task<Boolean> createTask(){
+
+	protected Task<Boolean> createTask() {
 		return new Task<Boolean>() {
-			
-			protected Boolean call(){
+			protected Boolean call() {
 				try {
 					Socket socket = new Socket("localhost", Server.SERVER_PORT);
 					oos = new ObjectOutputStream(socket.getOutputStream());
 					System.out.println("Napojil sa");
-					
+
 					searchniFinalDestination();
-					
+
 					oos.writeInt(numOfTCP);
 					oos.flush();
-					
-					
+
 					executor = Executors.newCachedThreadPool();
-					for(int i = 0; i < numOfTCP; i++) {
+					for (int i = 0; i < numOfTCP; i++) {
 						Socket clientSocket = new Socket("localhost", Server.SERVER_PORT);
-						
-						
-						executor.execute();
+						FileReceiveTask recieveTask = new FileReceiveTask(clientSocket, copiedMap, latch);
+						executor.execute(recieveTask);
 					}
-				
-				
-				}catch (Exception e) {
+
+					try {
+						latch.await();
+					} catch (InterruptedException e) {
+						System.out.println("Client Executor shutdown");
+						executor.shutdownNow();
+					}
+					executor.close();
+					socket.close();
+
+				} catch (Exception e) {
 					System.out.println("Nenapojil sa");
 				}
-				
-				
-				
 				return false;
 			}
 		};
 	}
-	
+
 	private static void searchniFinalDestination() {
 		Searcher searcher = new Searcher(FINAL_DESTINATION, copiedMap, false);
 		try {
@@ -81,7 +82,5 @@ public class Client {
 		}
 
 	}
-	
-}
 
-	
+}
