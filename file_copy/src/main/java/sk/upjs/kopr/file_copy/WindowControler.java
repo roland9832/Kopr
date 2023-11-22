@@ -43,6 +43,12 @@ public class WindowControler {
 
 	@FXML
 	void onContinueClick(ActionEvent event) {
+		
+		
+	}
+	
+	@FXML
+	void onStartClick(ActionEvent event) {
 		if (numOfTCP_textfield.getText().isBlank()) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setContentText("Nebol vyplneny pocet TCP");
@@ -62,12 +68,6 @@ public class WindowControler {
 				return;
 			}
 		}
-		
-	}
-	
-	@FXML
-	void onStartClick(ActionEvent event) {
-
 	}
 
 	@FXML

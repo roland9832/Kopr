@@ -31,10 +31,10 @@ public class FileSendTask implements Runnable {
 
 	@Override
 	public void run() {
-		runMethod();
+		call();
 	}
 
-	private void runMethod() {
+	private void call() {
 		System.out.println("Som vo FileSendTasku!");
 		ObjectOutputStream oos;
 		try {

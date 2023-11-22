@@ -30,7 +30,7 @@ public class Server {
 		server.runServerMethod();
 	}
 
-	@SuppressWarnings("unchecked")
+
 	public void runServerMethod() {
 		try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
 
@@ -41,8 +41,9 @@ public class Server {
 				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
 				numOfTCP = ois.readInt();
+				System.out.println("server prijal: " + numOfTCP);
 				copiedMap = (ConcurrentHashMap<String, Long>) ois.readObject();
-				searchRootDir();
+				searchniFileToShare();
 				
 
 				ExecutorService executor = Executors.newCachedThreadPool();
@@ -57,13 +58,13 @@ public class Server {
 		}
 	}
 
-	private static void searchRootDir() {
+	private static void searchniFileToShare() {
 		Searcher searcher = new Searcher(FILE_TO_SHARE, sendQueue, numOfTCP, serverRequest);
 		try {
-			long[] filesCountAndSize = searcher.call();
+			long[] countSize = searcher.call();
 			System.out.println("Searcher na serveri - prebehol som files to send!");
-			fileCount = (int) filesCountAndSize[0];
-			fileSize = filesCountAndSize[1];
+			fileSize = countSize[0];
+			fileCount = Long.valueOf(countSize[1]).intValue();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

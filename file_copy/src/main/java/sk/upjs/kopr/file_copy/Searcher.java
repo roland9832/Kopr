@@ -28,7 +28,6 @@ public class Searcher implements Callable<long[]> {
 	public Searcher(File main, ConcurrentHashMap<String, Long> copiedMap, boolean serverRequest) {
 		this.main = main;
 		this.copiedMap = copiedMap;
-		this.serverRequest = serverRequest;
 	}
 
 	// pill?
@@ -37,7 +36,7 @@ public class Searcher implements Callable<long[]> {
 			search(main.listFiles());
 		}
 
-		return new long[] { fileCount, fileSize };
+		return new long[] { fileSize, fileCount };
 	}
 
 	// ~ cviko 8 dirCounter
@@ -46,12 +45,16 @@ public class Searcher implements Callable<long[]> {
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile() && serverRequest) {
 				sendQueue.offer(files[i]);
+				fileCount++;
+				fileSize = fileSize + files[i].length();
 			}
-			if (files[i].isFile() && !serverRequest) {
+			else if (files[i].isFile() && !serverRequest) {
 				String file = files[i].getPath().substring(Client.FINAL_DESTINATION.getPath().lastIndexOf('/') + 1);
 				copiedMap.put(file, files[i].length());
+				fileCount++;
+				fileSize = fileSize + files[i].length();
 			}
-			if (files[i].isDirectory()) {
+			else if (files[i].isDirectory()) {
 				search(files[i].listFiles());
 			}
 		}
