@@ -22,8 +22,8 @@ public class FileSendTask implements Runnable {
 	private long offset;
 	private boolean isInterrupted;
 
-	public FileSendTask(BlockingQueue<File> sendQueue, Socket socket, ConcurrentHashMap<String, Long> copiedMap, int numOfTCP)
-			throws FileNotFoundException {
+	public FileSendTask(BlockingQueue<File> sendQueue, Socket socket, ConcurrentHashMap<String, Long> copiedMap,
+			int numOfTCP) throws FileNotFoundException {
 		this.sendQueue = sendQueue;
 		this.socket = socket;
 		this.coppiedMap = copiedMap;
@@ -45,7 +45,7 @@ public class FileSendTask implements Runnable {
 
 				while (sendFile != Searcher.POISON_PILL) {
 
-					String sendFileName = sendFile.getPath().substring(Server.FILE_TO_SHARE.lastIndexOf('\\') + 1);
+					String sendFileName = sendFile.getPath().substring(Server.FILE_TO_SHARE.lastIndexOf('\\'));
 					long sendFileSize = sendFile.length();
 					if (coppiedMap.isEmpty() || !coppiedMap.containsKey(sendFileName)) {
 						offset = 0;
@@ -97,9 +97,9 @@ public class FileSendTask implements Runnable {
 		}
 
 	}
-	
+
 	private void sendData() {
-		
+
 	}
 
 }

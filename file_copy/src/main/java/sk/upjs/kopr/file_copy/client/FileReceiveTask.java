@@ -38,7 +38,7 @@ public class FileReceiveTask implements Runnable {
 
 			while (true) {
 				String mapKey = osi.readUTF();
-				System.out.println("Save File Name: " + mapKey + Thread.currentThread().getName() );
+				System.out.println("Save File Name: " + mapKey + Thread.currentThread().getName());
 				if (mapKey.equals(Searcher.POISON_PILL.getName())) {
 					break;
 				}
@@ -75,7 +75,7 @@ public class FileReceiveTask implements Runnable {
 		} catch (Exception e) {
 			// TODO: handle exception
 		} finally {
-			
+
 			Thread.currentThread().interrupt();
 		}
 	}

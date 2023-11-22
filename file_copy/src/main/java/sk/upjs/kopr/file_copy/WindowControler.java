@@ -38,18 +38,14 @@ public class WindowControler {
 
 	@FXML
 	private Button stop_button;
-	
+
 	@FXML
 	void initialize() {
 		copy_lable.setText(Server.FILE_TO_SHARE);
 		filePath_lable.setText(Client.FINAL_DESTINATION);
 		stop_button.setDisable(true);
 	}
-	
-	
 
-	
-	
 	@FXML
 	void onStartClick(ActionEvent event) {
 		if (numOfTCP_textfield.getText().isBlank()) {
@@ -59,7 +55,7 @@ public class WindowControler {
 			dialog.getStyleClass().add("dialog");
 			alert.show();
 			return;
-		}else {
+		} else {
 			try {
 				numOfTCP = Integer.parseInt(numOfTCP_textfield.getText());
 			} catch (Exception e) {
@@ -71,7 +67,7 @@ public class WindowControler {
 				return;
 			}
 		}
-		
+
 		numOfTCP_textfield.setDisable(true);
 		latch = new CountDownLatch(numOfTCP);
 		stop_button.setDisable(false);
@@ -84,7 +80,7 @@ public class WindowControler {
 	void onStopClick(ActionEvent event) {
 		client.cancel();
 		start_button.setDisable(false);
-		
+
 	}
 
 }

@@ -28,7 +28,6 @@ public class Client extends Service<Boolean> {
 	public Client(int numOfTCP, CountDownLatch latch) {
 		this.numOfTCP = numOfTCP;
 		this.latch = latch;
-		
 
 	}
 
@@ -39,11 +38,10 @@ public class Client extends Service<Boolean> {
 					Socket socket = new Socket("localhost", Server.SERVER_PORT);
 					oos = new ObjectOutputStream(socket.getOutputStream());
 					System.out.println("Napojil sa");
-					
+
 					copiedMap = new ConcurrentHashMap<String, Long>();
 					searchniFinalDestination();
-					
-					
+
 					oos.writeInt(numOfTCP);
 					oos.writeObject(copiedMap);
 					oos.flush();
@@ -76,8 +74,7 @@ public class Client extends Service<Boolean> {
 		Searcher searcher = new Searcher(new File(FINAL_DESTINATION), copiedMap, false);
 		try {
 			long[] countSize = searcher.call();
-			System.out.println("Final destination:" + 
-			FINAL_DESTINATION);
+			System.out.println("Final destination:" + FINAL_DESTINATION);
 			fileSize = countSize[0];
 			fileCount = Long.valueOf(countSize[1]).intValue();
 

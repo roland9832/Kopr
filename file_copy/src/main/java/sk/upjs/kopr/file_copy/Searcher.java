@@ -36,12 +36,12 @@ public class Searcher implements Callable<long[]> {
 	public long[] call() throws Exception {
 		if (main.exists() && main.listFiles().length > 0) {
 			search(main.listFiles());
-			for(int i = 0; i < numOfTCP; i++) {
+			for (int i = 0; i < numOfTCP; i++) {
 				sendQueue.offer(Searcher.POISON_PILL);
 			}
 		}
 		System.out.println("fileSize: " + fileSize);
-		System.out.println("fileCount: " +  fileCount);
+		System.out.println("fileCount: " + fileCount);
 		return new long[] { fileSize, fileCount };
 	}
 
@@ -53,14 +53,12 @@ public class Searcher implements Callable<long[]> {
 				sendQueue.offer(files[i]);
 				fileCount++;
 				fileSize = fileSize + files[i].length();
-			}
-			else if (files[i].isFile() && !serverRequest) {
-				String file = files[i].getPath().substring(Client.FINAL_DESTINATION.lastIndexOf('\\') + 1);
+			} else if (files[i].isFile() && !serverRequest) {
+				String file = files[i].getPath().substring(Client.FINAL_DESTINATION.lastIndexOf('\\'));
 				copiedMap.put(file, files[i].length());
 				fileCount++;
 				fileSize = fileSize + files[i].length();
-			}
-			else if (files[i].isDirectory()) {
+			} else if (files[i].isDirectory()) {
 				search(files[i].listFiles());
 			}
 		}

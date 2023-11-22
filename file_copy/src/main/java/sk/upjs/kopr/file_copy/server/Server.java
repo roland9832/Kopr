@@ -31,7 +31,6 @@ public class Server {
 		server.runServerMethod();
 	}
 
-
 	public void runServerMethod() {
 		System.out.println("Server sa spustil");
 		try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
@@ -39,12 +38,12 @@ public class Server {
 			while (true) {
 				Socket socket = serverSocket.accept();
 
-				ObjectInputStream osi = new ObjectInputStream(socket.getInputStream());				
+				ObjectInputStream osi = new ObjectInputStream(socket.getInputStream());
 				numOfTCP = osi.readInt();
 				System.out.println("Server prijal: " + numOfTCP);
 				copiedMap = (ConcurrentHashMap<String, Long>) osi.readObject();
 				searchniFileToShare();
-								
+
 				for (int i = 0; i < numOfTCP; i++) {
 					Socket socketSender = serverSocket.accept();
 					FileSendTask sendTask = new FileSendTask(sendQueue, socketSender, copiedMap, numOfTCP);
@@ -53,7 +52,7 @@ public class Server {
 			}
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
-			
+
 		}
 	}
 
