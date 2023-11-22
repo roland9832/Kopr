@@ -15,7 +15,7 @@ import sk.upjs.kopr.file_copy.server.Server;
 
 public class Client extends Service<Boolean> {
 
-	public static final String FINAL_DESTINATION = "C:\\Users\\Roniko\\Desktop\\test_client";
+	public static final String FINAL_DESTINATION = "C:\\Users\\Roniko\\Desktop\\test_client\\";
 
 	private static ConcurrentHashMap<String, Long> copiedMap;
 	private static int numOfTCP;
@@ -76,8 +76,7 @@ public class Client extends Service<Boolean> {
 		Searcher searcher = new Searcher(new File(FINAL_DESTINATION), copiedMap, false);
 		try {
 			long[] countSize = searcher.call();
-			System.out.println(FINAL_DESTINATION);
-			System.out.println("Searcher na serveri - prebehol som files to send!");
+			System.out.println("Final destination:" + FINAL_DESTINATION);
 			fileSize = countSize[0];
 			fileCount = Long.valueOf(countSize[1]).intValue();
 

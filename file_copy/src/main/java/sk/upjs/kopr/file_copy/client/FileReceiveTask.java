@@ -36,20 +36,21 @@ public class FileReceiveTask implements Runnable {
 			ObjectInputStream osi = new ObjectInputStream(socket.getInputStream());
 			while (true) {
 				String mapKey = osi.readUTF();
+				System.out.println("Save File Name: " + mapKey);
 				if (mapKey.equals(Searcher.POISON_PILL.getName())) {
 					break;
 				}
-				File saveFile = new File(Client.FINAL_DESTINATION + '/' + mapKey);
-				System.out.println("SaveFile path: "+ Client.FINAL_DESTINATION + '/' + mapKey);
+				File saveFile = new File(Client.FINAL_DESTINATION + '\\' + mapKey);
 				File parentOfFile = saveFile.getParentFile();
-				if(!parentOfFile.exists()) {
-					parentOfFile.mkdirs();
-				}
+				parentOfFile.mkdirs();
+				
 				
 				if(copiedMap.containsKey(mapKey)) {
 					offset = copiedMap.get(mapKey);
+					System.out.println("here: 1");
 				}else {
 					offset = 0;
+					System.out.println("here: 2");
 				}
 				
 				long fileSize = osi.readLong();
@@ -59,6 +60,7 @@ public class FileReceiveTask implements Runnable {
 				byte[] recievedBytes = new byte[BUFFER_SIZE];
 				raf.seek(offset);
 				int veReadBytes = 0;
+				System.out.println("After raf");
 				while(offset < fileSize) {
 					if (Thread.currentThread().isInterrupted()) {
 						break;

@@ -37,12 +37,12 @@
       </Text>
       <Button fx:id="stop_button" layoutX="377.0" layoutY="283.0" mnemonicParsing="false" onAction="#onStopClick" prefHeight="20.0" prefWidth="70.0" text="Stop" />
       <Button fx:id="continue_button" layoutX="126.0" layoutY="283.0" mnemonicParsing="false" onAction="#onContinueClick" prefHeight="20.0" prefWidth="70.0" text="Continue" />
-      <Label fx:id="filePath_lable" layoutX="131.0" layoutY="98.0" prefHeight="18.0" prefWidth="414.0" text="filePath">
+      <Label fx:id="filePath_lable" layoutX="131.0" layoutY="98.0" prefHeight="18.0" prefWidth="414.0" text="CopyFromDestination">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="copy_lable" layoutX="130.0" layoutY="128.0" prefHeight="18.0" prefWidth="411.0" text="copyTo">
+      <Label fx:id="copy_lable" layoutX="130.0" layoutY="128.0" prefHeight="18.0" prefWidth="411.0" text="CopyTodestination">
          <font>
             <Font size="14.0" />
          </font>

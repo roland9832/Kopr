@@ -40,7 +40,8 @@ public class Searcher implements Callable<long[]> {
 				sendQueue.offer(Searcher.POISON_PILL);
 			}
 		}
-
+		System.out.println("fileSize: " + fileSize);
+		System.out.println("fileCount: " +  fileCount);
 		return new long[] { fileSize, fileCount };
 	}
 

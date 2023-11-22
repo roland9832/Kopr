@@ -18,15 +18,16 @@ public class FileSendTask implements Runnable {
 	private final Socket socket;
 	private static ConcurrentHashMap<String, Long> coppiedMap;
 	private static BlockingQueue<File> sendQueue;
-
+	private static int numOfTCP;
 	private long offset;
 	private boolean isInterrupted;
 
-	public FileSendTask(BlockingQueue<File> sendQueue, Socket socket, ConcurrentHashMap<String, Long> copiedMap)
+	public FileSendTask(BlockingQueue<File> sendQueue, Socket socket, ConcurrentHashMap<String, Long> copiedMap, int numOfTCP)
 			throws FileNotFoundException {
 		this.sendQueue = sendQueue;
 		this.socket = socket;
 		this.coppiedMap = copiedMap;
+		this.numOfTCP = numOfTCP;
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class FileSendTask implements Runnable {
 	}
 
 	private void call() {
-		System.out.println("Som vo FileSendTasku!");
+		System.out.println("sendTask");
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(socket.getOutputStream());
@@ -44,32 +45,32 @@ public class FileSendTask implements Runnable {
 
 				while (sendFile != Searcher.POISON_PILL) {
 
-					String fileToSendName = sendFile.getPath().substring(Server.FILE_TO_SHARE.lastIndexOf('/') + 1);
-					long fileToSendSize = sendFile.length();
-					if (coppiedMap == null || coppiedMap.isEmpty() || !coppiedMap.containsKey(fileToSendName)) {
+					String sendFileName = sendFile.getPath().substring(Server.FILE_TO_SHARE.lastIndexOf('\\') + 1);
+					long sendFileSize = sendFile.length();
+					if (coppiedMap == null || coppiedMap.isEmpty() || !coppiedMap.containsKey(sendFileName)) {
 						offset = 0;
-					} else { // inak si vezmem offset z mapy stiahnutych
-						offset = coppiedMap.get(fileToSendName);
-						if (offset == fileToSendSize) {
+					} else {
+						offset = coppiedMap.get(sendFileName);
+						if (offset == sendFileSize) {
 							sendFile = sendQueue.take();
 							continue;
 						}
 					}
 
-					oos.writeUTF(fileToSendName);
-					oos.writeLong(fileToSendSize);
+					oos.writeUTF(sendFileName);
+					oos.writeLong(sendFileSize);
 					oos.flush();
 
-					byte[] buffer = new byte[BLOCK_SIZE];
+					byte[] sendBytes = new byte[BLOCK_SIZE];
 					RandomAccessFile raf = new RandomAccessFile(sendFile, "r");
 					raf.seek(offset);
 
-					while (offset < fileToSendSize) {
-						if (fileToSendSize - offset < buffer.length) {
-							buffer = new byte[(int) (fileToSendSize - offset)];
+					while (offset < sendFileSize) {
+						if (sendFileSize - offset < sendBytes.length) {
+							sendBytes = new byte[(int) (sendFileSize - offset)];
 						}
-						offset += raf.read(buffer);
-						oos.write(buffer);
+						offset += raf.read(sendBytes);
+						oos.write(sendBytes);
 					}
 
 					oos.flush();
@@ -81,7 +82,7 @@ public class FileSendTask implements Runnable {
 				oos.flush();
 
 			} catch (SocketException e) {
-				System.out.println("Server nema partaka !!!");
+				System.out.println("Server nema dvojucku");
 
 			} catch (InterruptedException e) {
 				isInterrupted = true;
