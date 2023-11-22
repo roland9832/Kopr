@@ -16,7 +16,7 @@ import sk.upjs.kopr.file_copy.Searcher;
 public class Server {
 
 	public static final int SERVER_PORT = 5000;
-	public static final File FILE_TO_SHARE = new File("C:\\Users\\Roniko\\Desktop\\test_server");
+	public static final String FILE_TO_SHARE = "C:\\Users\\Roniko\\Desktop\\test_server";
 
 	private static ConcurrentHashMap<String, Long> copiedMap;
 	private static BlockingQueue<File> sendQueue = new LinkedBlockingQueue<File>();
@@ -61,7 +61,7 @@ public class Server {
 
 	private static void searchniFileToShare() {
 		try {
-			Searcher searcher = new Searcher(FILE_TO_SHARE, sendQueue, numOfTCP, serverRequest);
+			Searcher searcher = new Searcher(new File(FILE_TO_SHARE), sendQueue, numOfTCP, serverRequest);
 			long[] countSize = searcher.call();
 			System.out.println("Searcher na serveri - prebehol som files to send!");
 			fileSize = countSize[0];

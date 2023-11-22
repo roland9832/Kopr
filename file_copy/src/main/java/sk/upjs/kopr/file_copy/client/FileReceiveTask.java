@@ -35,12 +35,12 @@ public class FileReceiveTask implements Runnable {
 		try {
 			ObjectInputStream osi = new ObjectInputStream(socket.getInputStream());
 			while (true) {
-				String mapKey = osi.toString();
+				String mapKey = osi.readUTF();
 				if (mapKey.equals(Searcher.POISON_PILL.getName())) {
 					break;
 				}
-				File saveFile = new File(Client.FINAL_DESTINATION.getAbsolutePath() + '/' + mapKey);
-				System.out.println("SaveFile path: "+ Client.FINAL_DESTINATION.getAbsolutePath() + '/' + mapKey);
+				File saveFile = new File(Client.FINAL_DESTINATION + '/' + mapKey);
+				System.out.println("SaveFile path: "+ Client.FINAL_DESTINATION + '/' + mapKey);
 				File parentOfFile = saveFile.getParentFile();
 				if(!parentOfFile.exists()) {
 					parentOfFile.mkdirs();

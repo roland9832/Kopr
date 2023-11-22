@@ -15,7 +15,7 @@ import sk.upjs.kopr.file_copy.server.Server;
 
 public class Client extends Service<Boolean> {
 
-	public static final File FINAL_DESTINATION = new File("C:\\Users\\Roniko\\Desktop\\test_client");
+	public static final String FINAL_DESTINATION = "C:\\Users\\Roniko\\Desktop\\test_client";
 
 	private static ConcurrentHashMap<String, Long> copiedMap;
 	private static int numOfTCP;
@@ -28,7 +28,7 @@ public class Client extends Service<Boolean> {
 	public Client(int numOfTCP, CountDownLatch latch) {
 		this.numOfTCP = numOfTCP;
 		this.latch = latch;
-		this.executor = Executors.newFixedThreadPool(numOfTCP);
+		
 
 	}
 
@@ -39,10 +39,13 @@ public class Client extends Service<Boolean> {
 					Socket socket = new Socket("localhost", Server.SERVER_PORT);
 					oos = new ObjectOutputStream(socket.getOutputStream());
 					System.out.println("Napojil sa");
-
+					
+					copiedMap = new ConcurrentHashMap<String, Long>();
 					searchniFinalDestination();
-
+					
+					
 					oos.writeInt(numOfTCP);
+					oos.writeObject(copiedMap);
 					oos.flush();
 
 					executor = Executors.newCachedThreadPool();
@@ -70,9 +73,10 @@ public class Client extends Service<Boolean> {
 	}
 
 	private static void searchniFinalDestination() {
-		Searcher searcher = new Searcher(FINAL_DESTINATION, copiedMap, false);
+		Searcher searcher = new Searcher(new File(FINAL_DESTINATION), copiedMap, false);
 		try {
 			long[] countSize = searcher.call();
+			System.out.println(FINAL_DESTINATION);
 			System.out.println("Searcher na serveri - prebehol som files to send!");
 			fileSize = countSize[0];
 			fileCount = Long.valueOf(countSize[1]).intValue();

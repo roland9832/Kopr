@@ -44,7 +44,7 @@ public class FileSendTask implements Runnable {
 
 				while (sendFile != Searcher.POISON_PILL) {
 
-					String fileToSendName = sendFile.getPath().substring(Server.FILE_TO_SHARE.getPath().lastIndexOf('/') + 1);
+					String fileToSendName = sendFile.getPath().substring(Server.FILE_TO_SHARE.lastIndexOf('/') + 1);
 					long fileToSendSize = sendFile.length();
 					if (coppiedMap == null || coppiedMap.isEmpty() || !coppiedMap.containsKey(fileToSendName)) {
 						offset = 0;
